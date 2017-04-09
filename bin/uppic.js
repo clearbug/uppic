@@ -1,9 +1,9 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 const crypto = require("crypto");
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
-const child_process = require('child_process');
+const ncp = require('copy-paste');
 
 const program = require('commander');
 const qiniu = require("qiniu");
@@ -76,9 +76,10 @@ function uploadFile(uptoken, key, localFile, host) {
     qiniu.io.putFile(uptoken, key, localFile, extra, function(err, ret) {
       if(!err) {
         // 上传成功， 处理返回值
-        console.log(localFile + ' 上传成功, 外链 URL 已复制到粘贴板...');
         //console.dir(ret);
-        child_process.spawn('clip').stdin.end(host + '/' + ret.key);
+        ncp.copy(host + '/' + ret.key, () => {
+            console.log(localFile + ' 上传成功, 外链 URL 已复制到粘贴板...');
+        });
       } else {
         // 上传失败， 处理返回代码
         console.log(err);
