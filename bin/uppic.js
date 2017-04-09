@@ -79,6 +79,7 @@ function uploadFile(uptoken, key, localFile, host) {
         //console.dir(ret);
         ncp.copy(host + '/' + ret.key, () => {
             console.log(localFile + ' 上传成功, 外链 URL 已复制到粘贴板...');
+            process.exit();
         });
       } else {
         // 上传失败， 处理返回代码
